@@ -2,6 +2,8 @@
 
 **Talk instead of typing, in any app.** Hold a shortcut, speak, let go: Hush transcribes what you said, cleans it up (fillers gone, self-corrections applied, punctuation fixed) and pastes it where your cursor is.
 
+![Hush on macOS: the home screen with the dictation hero, words per minute, day streak, fixes and dictation stats](docs/screenshot.png)
+
 - **Private by default.** Speech-to-text runs on your computer (Whisper). Cleanup runs locally too (Ollama), or, if you choose, on Claude for smarter results.
 - **No account, no subscription.** Free and open source (GPL-3.0).
 - **Windows and macOS** (Apple Silicon).
