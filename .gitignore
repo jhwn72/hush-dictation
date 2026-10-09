@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+tools/*.log
+tools/frames/
+tools/pillshots/

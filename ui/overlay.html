@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Hush overlay</title>
+<style>
+  :root { --fg: #F4F4F6; --muted: #8C8C96; --bad: #FF6166; --good: #4ADE80; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; user-select: none; cursor: default;
+    font: 500 12.5px "Geist", "Segoe UI Variable Text", "Segoe UI", -apple-system, sans-serif; color: var(--fg); -webkit-font-smoothing: antialiased; }
+  .pill { position: absolute; inset: 0; border-radius: 999px; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0 16px;
+    background: radial-gradient(120px 40px at 50% -10%, rgba(255,255,255,0.10), transparent 70%), linear-gradient(180deg, #17171C, #0B0B0F);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 0 1px rgba(255,255,255,0.08); }
+  .bars { display: flex; align-items: center; gap: 3px; height: 26px; }
+  .bars i { width: 3px; border-radius: 3px; height: 4px; background: linear-gradient(180deg, #FFFFFF, #9A9AA4); box-shadow: 0 0 8px rgba(255,255,255,0.35); transition: height .08s linear; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--bad); box-shadow: 0 0 10px var(--bad); animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .35; } }
+  .txt { white-space: nowrap; color: var(--muted); }
+  .txt b { color: var(--fg); font-weight: 500; }
+  .think { display: flex; gap: 5px; }
+  .think i { width: 6px; height: 6px; border-radius: 50%; background: var(--fg); opacity: .25; animation: blink 1s ease-in-out infinite; }
+  .think i:nth-child(2) { animation-delay: .15s; } .think i:nth-child(3) { animation-delay: .3s; }
+  @keyframes blink { 40% { opacity: 1; transform: translateY(-2px); } }
+  .st { display: none; align-items: center; gap: 10px; }
+  body[data-s="recording"] .rec, body[data-s="locked"] .rec, body[data-s="processing"] .proc, body[data-s="msg"] .msg { display: flex; }
+  body[data-s="locked"] .dot { background: var(--good); box-shadow: 0 0 10px var(--good); }
+  .lockhint { display: none; }
+  body[data-s="locked"] .lockhint { display: inline; }
+  .msg .ic { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+  .msg.bad .ic { background: var(--bad); box-shadow: 0 0 10px var(--bad); }
+  .msg.good .ic { background: var(--good); box-shadow: 0 0 10px var(--good); }
+</style>
+</head>
+<body data-s="hidden">
+  <div class="pill">
+    <div class="st rec"><span class="dot"></span><div class="bars" id="bars"></div><span class="txt lockhint">Hands-free · <b>Esc</b></span></div>
+    <div class="st proc"><div class="think"><i></i><i></i><i></i></div><span class="txt" id="ptxt"></span></div>
+    <div class="st msg" id="msg"><span class="ic"></span><span class="txt" id="mtxt"></span></div>
+  </div>
+<script>
+  const N = 15, bars = document.getElementById('bars');
+  for (let i = 0; i < N; i++) bars.appendChild(document.createElement('i'));
+  const hist = new Array(N).fill(0);
+  window.setLevel = (lvl) => {
+    hist.shift(); hist.push(lvl);
+    const mid = (N - 1) / 2;
+    bars.childNodes.forEach((b, i) => {
+      const shape = 1 - Math.abs(i - mid) / (mid + 2);
+      const v = hist[(i * 7) % N] * 0.5 + lvl * 0.5;
+      b.style.height = (4 + Math.min(22, v * 30 * shape + Math.random() * 2)) + 'px';
+    });
+  };
+  window.setState = (s, text) => {
+    const msg = document.getElementById('msg');
+    if (s === 'processing') { document.getElementById('ptxt').textContent = text || ''; document.body.dataset.s = 'processing'; return; }
+    if (s === 'recording' || s === 'locked' || s === 'hidden') { document.body.dataset.s = s; return; }
+    msg.className = 'st msg ' + ({ error: 'bad', done: 'good' }[s] || '');
+    document.getElementById('mtxt').textContent = text || '';
+    document.body.dataset.s = 'msg';
+  };
+</script>
+</body>
+</html>

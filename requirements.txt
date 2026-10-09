@@ -1,0 +1,21 @@
+pywebview>=5.3
+pynput>=1.7.7
+sounddevice>=0.4.7
+numpy>=1.26
+pyperclip>=1.9
+requests>=2.31
+anthropic>=1.0
+keyring>=25
+pillow>=10.1
+psutil>=5.9; sys_platform == "win32"
+uiautomation>=2.0; sys_platform == "win32"
+soundcard>=0.4.4; sys_platform == "win32"
+
+# Speech-to-text: faster-whisper (CUDA/CPU) on Windows/Linux, MLX on Apple Silicon
+faster-whisper>=1.1; sys_platform != "darwin"
+nvidia-cublas-cu12; sys_platform == "win32"
+nvidia-cudnn-cu12>=9,<10; sys_platform == "win32"
+mlx-whisper>=0.4; sys_platform == "darwin" and platform_machine == "arm64"
+pyobjc-framework-Cocoa; sys_platform == "darwin"
+pyobjc-framework-ApplicationServices; sys_platform == "darwin"
+pyobjc-framework-Quartz; sys_platform == "darwin"
